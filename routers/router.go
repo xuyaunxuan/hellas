@@ -1,10 +1,11 @@
 package routers
 
 import (
-	"hellas/controllers"
 	"github.com/astaxie/beego"
+	"hellas/controllers/user"
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{})
+	beego.Router("/create/user", &user.Controller{}, "get:CreateUser")
+	beego.Router("/login", &user.Controller{}, "get:CreateUser")
 }
