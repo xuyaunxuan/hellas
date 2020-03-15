@@ -208,10 +208,16 @@ func Login(param user.LoginParameter) user.LoginResult {
 		return result
 	}
 
+	// 用户ID设定
 	result.AccountId = userList[0].AccountId
+	// 用户邮箱设定
 	result.MailAddress = userList[0].MailAddress
+	// 用户昵称设定
 	result.NickName = userList[0].NickName
-
+	// token生成
+	token, _ := utils.GenerateToken(userList[0].AccountId)
+	// token设定
+	result.Token = token
 	// 提交事务
 	tx.Commit()
 	// 处理成功

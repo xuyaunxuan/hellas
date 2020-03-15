@@ -26,6 +26,8 @@ func InitRouter() *gin.Engine {
 		user.POST("/resetPassword", controller.ResetUserPassword)
 		// 用户登录
 		user.POST("/login", controller.Login)
+		// 用户信息编辑
+		user.POST("/editDetail", controller.EditUserDetail)
 	}
 
 	return r

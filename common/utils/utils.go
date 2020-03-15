@@ -4,12 +4,48 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"encoding/hex"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/go-playground/validator"
 	"hellas/common/constant"
+	"hellas/common/setting"
 	"log"
 	"math/big"
 	"strings"
+	"time"
 )
+
+type Claims struct {
+	AccountId string `json:"accountId"`
+	jwt.StandardClaims
+}
+
+// 生成Token
+func GenerateToken(accountId string) (string, error) {
+	nowTime := time.Now()
+	expireTime := nowTime.Add(24 * time.Hour)
+	var claims Claims
+	claims.AccountId = accountId
+	claims.ExpiresAt = expireTime.Unix()
+	claims.Issuer = "hellas"
+
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString([]byte(setting.JwtSecret))
+
+	return token, err
+}
+
+// 解析token
+func JwtParseUser(token string) (string, error) {
+	tokenInfo , err := jwt.Parse(token, func(token *jwt.Token) (i interface{}, e error) {
+		return []byte(setting.JwtSecret),nil
+	})
+	if err != nil {
+		log.Print(err)
+		return "", err
+	}
+	finToken := tokenInfo.Claims.(jwt.MapClaims)
+	return finToken["accountId"].(string), err
+}
 
 // 生成随机盐
 func CreateSalt() string {

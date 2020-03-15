@@ -7,4 +7,5 @@ type LoginResult struct {
 	AccountId string `json:"accountId"`
 	MailAddress string `json:"mailAddress"`
 	NickName string `json:"nickName"`
+	Token string `json:token`
 }

@@ -104,3 +104,10 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
+
+// 用户情报更新
+func EditUserDetail(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	accountId, _ :=utils.JwtParseUser(token)
+	log.Print(accountId)
+}

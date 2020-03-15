@@ -26,9 +26,9 @@ var (
 	DataBaseName string
 	DataBasePath string
 
+	JwtSecret string
 
 	PageSize int
-	JwtSecret string
 )
 
 func Init() {
@@ -44,6 +44,8 @@ func Init() {
 	LoadMail()
 	// 数据库设定
 	LoadDataBase()
+	// JWT密钥设定
+	LoadJwt()
 	//LoadApp()
 }
 
@@ -86,6 +88,15 @@ func LoadDataBase() {
 	DataBaseType = sec.Key("DATABASE_TYPE").MustString("")
 	DataBaseName = sec.Key("DATABASE_NAME").MustString("")
 	DataBasePath = sec.Key("DATABASE_PATH").MustString("")
+}
+
+func LoadJwt() {
+	sec, err := Cfg.GetSection("jwt")
+	if err != nil {
+		log.Fatalf("Fail to get section 'app': %v", err)
+	}
+
+	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
 }
 
 //func LoadApp() {
