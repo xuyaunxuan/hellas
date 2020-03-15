@@ -6,4 +6,5 @@ var Messages = map[string]string {
 	"max" : "{0}超过允许的最大长度",
 	"email" : "{0}格式不正确",
 	"used" : "{0}已被使用",
+	"unused" : "{0}未注册",
 }

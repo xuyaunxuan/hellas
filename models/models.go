@@ -11,21 +11,9 @@ import (
 var db *gorm.DB
 
 func Setup() {
-	var (
-		err error
-		dbType, path string
-	)
+	var err error
 
-	sec, err := setting.Cfg.GetSection("database")
-	if err != nil {
-		log.Fatal(2, "Fail to get section 'database': %v", err)
-	}
-
-	dbType = sec.Key("TYPE").String()
-	//dbName = sec.Key("NAME").String()
-	path = sec.Key("PATH").String()
-	db, err = gorm.Open(dbType, path)
-
+	db, err = gorm.Open(setting.DataBaseType, setting.DataBasePath)
 	if err != nil {
 		log.Println(err)
 	}

@@ -10,6 +10,8 @@ type User struct {
 	NickName string
 	Password string
 	Salt string
+	CaptchaCode string
+	SendCaptchaTime time.Time
 	InsertDateTime time.Time
 	UpdateDateTime time.Time
 }

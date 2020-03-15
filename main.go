@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	//setting.init()
+	setting.Init()
 	models.Setup()
 	//logging.Setup()
 	//gredis.Setup()

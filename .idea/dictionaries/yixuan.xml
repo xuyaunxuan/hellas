@@ -2,6 +2,10 @@
   <dictionary name="yixuan">
     <words>
       <w>alphanum</w>
+      <w>iken</w>
+      <w>mxhichina</w>
+      <w>smtp</w>
+      <w>sqlite</w>
     </words>
   </dictionary>
 </component>

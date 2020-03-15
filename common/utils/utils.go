@@ -21,6 +21,17 @@ func CreateSalt() string {
 	return string(salt)
 }
 
+// 生成随机验证码
+func CreateCaptchaCode() string {
+	var defaultLetters = []rune("0123456789")
+	captchaCode := make([]rune, 6)
+	for i := range captchaCode {
+		captchaCode[i] = defaultLetters[rand.Intn(len(defaultLetters))]
+	}
+
+	return string(captchaCode)
+}
+
 // 生成混淆密码（MD5）
 func CreateMd5Password(salt string, password string) string {
 	m5 := md5.New()
