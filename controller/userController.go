@@ -1,13 +1,14 @@
 package controller
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
+	"hellas/common/constant"
 	"hellas/common/e"
-	"hellas/common/error"
+	"hellas/common/utils"
 	"hellas/dtos/common"
 	"hellas/dtos/user"
 	"hellas/models"
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator"
 	"log"
 	"net/http"
 )
@@ -21,36 +22,20 @@ func RegisterUser(c *gin.Context) {
 		log.Printf("%+v", registerParameter)
 		var errorDto common.ErrorDto
 		errorDto.Message = e.MsgFlags[e.INVALID_PARAMS] +  err.Error()
-		//errorDto.DebuggerError = err.Error()
-		// 生成错误信息返回
-		errorDto.Errors = error.CreateMessages(err.(validator.ValidationErrors))
-		//c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// 生成错误信息
+		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
+		// 返回status400
 		c.JSON(http.StatusBadRequest, errorDto)
 		return
 	}
 
 	log.Printf("%+v", registerParameter)
-	data := make(map[string]interface{})
-	data["lists"] = models.CreateNewUser(registerParameter)
-	code := e.INVALID_PARAMS
-	c.JSON(http.StatusOK, gin.H{
-		"code" : code,
-		"msg" : e.GetMsg(code),
-		"data" : data,
-	})
+	// 新用户创建
+	result := models.CreateNewUser(registerParameter)
+	if result.Result == constant.NG {
+		c.JSON(http.StatusBadRequest, result)
+		return
+	}
 
-
-	//valid := validation.Validation{}
-
-	//code := e.INVALID_PARAMS
-	//if ! valid.HasErrors() {
-	//	code = e.SUCCESS
-
-	//} else {
-	//	for _, err := range valid.Errors {
-	//		log.Println(err.Key, err.Message)
-	//	}
-	//}
-
-
+	c.JSON(http.StatusOK, result)
 }

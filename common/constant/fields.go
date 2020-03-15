@@ -1,4 +1,4 @@
-package error
+package constant
 
 
 var Fields = map[string]string {
