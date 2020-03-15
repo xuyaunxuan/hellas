@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"hellas/controller"
 
-	"ginWork/common/setting"
+	"hellas/common/setting"
 )
 
 func InitRouter() *gin.Engine {
@@ -22,6 +22,8 @@ func InitRouter() *gin.Engine {
 		user.POST("/register", controller.RegisterUser)
 		// 请求邮箱验证码
 		user.POST("/sendCaptchaMail", controller.SendUserCaptchaMail)
+		// 密码变更
+		user.POST("/resetPassword", controller.ResetUserPassword)
 	}
 
 	return r

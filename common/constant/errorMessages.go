@@ -7,4 +7,7 @@ var Messages = map[string]string {
 	"email" : "{0}格式不正确",
 	"used" : "{0}已被使用",
 	"unused" : "{0}未注册",
+	"len" : "{0}长度不正确",
+	"samePassword" : "密码输入不一致",
+	"sameCaptcha" : "验证码不正确",
 }

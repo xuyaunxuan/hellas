@@ -19,7 +19,7 @@ import (
 func CreateNewUser(param user.RegisterParameter) common.BaseResult {
 	// 开启事务
 	tx := db.Begin()
-	// 用户创捷返回结果
+	// 用户创建返回结果
 	var result common.BaseResult
 	// 用户信息DTO
 	var userList []dtos.User
@@ -73,20 +73,18 @@ func CreateNewUser(param user.RegisterParameter) common.BaseResult {
 func SendCaptchaMail(param user.SendCaptchaMailParameter) common.BaseResult {
 	// 开启事务
 	tx := db.Begin()
-	// 用户创捷返回结果
+	// 用户验证返回结果
 	var result common.BaseResult
 	// 用户信息DTO
 	var userList []dtos.User
 	// 邮箱地址存在验证
-	if param.MailAddress != "" {
-		db.Where(&dtos.User{MailAddress: param.MailAddress}).Find(&userList)
-		// 查询结果为0
-		if len(userList) == 0 {
-			// 邮箱地址已被使用
-			result.Result = constant.NG
-			result.Errors = append(result.Errors, utils.JoinMessages("MailAddress","unused"))
-			return result
-		}
+	db.Where(&dtos.User{MailAddress: param.MailAddress}).Find(&userList)
+	// 查询结果为0
+	if len(userList) == 0 {
+		// 邮箱地址不存在
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("MailAddress","unused"))
+		return result
 	}
 	// 生成随机验证码
 	var captchaCode = utils.CreateCaptchaCode()
@@ -120,6 +118,52 @@ func SendCaptchaMail(param user.SendCaptchaMailParameter) common.BaseResult {
 	d := gomail.NewDialer(setting.MailHost, setting.MailPort, setting.MailAddress, setting.MailPassword)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	d.DialAndSend(m)
+	// 处理成功
+	result.Result = constant.OK
+	return result
+}
 
+// 重置密码
+func ResetPassword(param user.ResetPasswordParameter) common.BaseResult {
+	// 开启事务
+	tx := db.Begin()
+	// 用户验证返回结果
+	var result common.BaseResult
+	// 用户信息DTO
+	var userList []dtos.User
+	// 密码输入一致性验证
+	if param.OncePassword != param.TwicePassword {
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","samePassword"))
+		return result
+	}
+	// 邮箱地址存在验证
+	db.Where(&dtos.User{MailAddress: param.MailAddress}).Find(&userList)
+	// 查询结果为0
+	if len(userList) == 0 {
+		// 邮箱地址不存在
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("MailAddress","unused"))
+		return result
+	}
+	// 验证码一致性验证
+	if userList[0].CaptchaCode != param.CaptchaCode {
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","sameCaptcha"))
+		return result
+	}
+
+	// 生成随机盐
+	var salt = utils.CreateSalt()
+	// 生成混淆密码
+	var confusePassword = utils.CreateMd5Password(salt, param.OncePassword)
+
+	// 更改密码，更改盐值
+	db.Model(dtos.User{}).Where(dtos.User{MailAddress:param.MailAddress}).Update(dtos.User{Salt : salt, Password:confusePassword, UpdateDateTime:time.Now(),CaptchaCode:"######"})
+
+	// 提交事务
+	tx.Commit()
+	// 处理成功
+	result.Result = constant.OK
 	return result
 }
