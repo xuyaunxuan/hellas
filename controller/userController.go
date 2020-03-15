@@ -18,11 +18,11 @@ func RegisterUser(c *gin.Context) {
 	// 参数验证
 	if err := c.ShouldBindJSON(&registerParameter); err != nil {
 		log.Printf("%+v", registerParameter)
-		var errorDto common.ErrorDto
+		var baseResult common.BaseResult
 		// 生成错误信息
-		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
+		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
 		// 返回status400
-		c.JSON(http.StatusBadRequest, errorDto)
+		c.JSON(http.StatusBadRequest, baseResult)
 		return
 	}
 
@@ -41,11 +41,11 @@ func SendUserCaptchaMail(c *gin.Context) {
 	var sendCaptchaMailParameter user.SendCaptchaMailParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&sendCaptchaMailParameter); err != nil {
-		var errorDto common.ErrorDto
+		var baseResult common.BaseResult
 		// 生成错误信息
-		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
+		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
 		// 返回status400
-		c.JSON(http.StatusBadRequest, errorDto)
+		c.JSON(http.StatusBadRequest, baseResult)
 		return
 	}
 
@@ -64,11 +64,11 @@ func ResetUserPassword(c *gin.Context) {
 	var resetPasswordParameter user.ResetPasswordParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&resetPasswordParameter); err != nil {
-		var errorDto common.ErrorDto
+		var baseResult common.BaseResult
 		// 生成错误信息
-		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
+		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
 		// 返回status400
-		c.JSON(http.StatusBadRequest, errorDto)
+		c.JSON(http.StatusBadRequest, baseResult)
 		return
 	}
 
@@ -87,11 +87,11 @@ func Login(c *gin.Context) {
 	var loginParameter user.LoginParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&loginParameter); err != nil {
-		var errorDto common.ErrorDto
+		var baseResult common.BaseResult
 		// 生成错误信息
-		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
+		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
 		// 返回status400
-		c.JSON(http.StatusBadRequest, errorDto)
+		c.JSON(http.StatusBadRequest, baseResult)
 		return
 	}
 
