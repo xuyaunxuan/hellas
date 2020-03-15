@@ -2,11 +2,12 @@ package utils
 
 import (
 	"crypto/md5"
+	"crypto/rand"
 	"encoding/hex"
 	"github.com/go-playground/validator"
 	"hellas/common/constant"
 	"log"
-	"math/rand"
+	"math/big"
 	"strings"
 )
 
@@ -15,7 +16,9 @@ func CreateSalt() string {
 	var defaultLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	salt := make([]rune, 50)
 	for i := range salt {
-		salt[i] = defaultLetters[rand.Intn(len(defaultLetters))]
+		//b := new(big.Int).SetInt64(int64(len(defaultLetters)))
+		num, _ := rand.Int(rand.Reader, big.NewInt(62))
+		salt[i] = defaultLetters[num.Int64()]
 	}
 
 	return string(salt)
@@ -26,7 +29,8 @@ func CreateCaptchaCode() string {
 	var defaultLetters = []rune("0123456789")
 	captchaCode := make([]rune, 6)
 	for i := range captchaCode {
-		captchaCode[i] = defaultLetters[rand.Intn(len(defaultLetters))]
+		num, _ := rand.Int(rand.Reader, big.NewInt(10))
+		captchaCode[i] = defaultLetters[num.Int64()]
 	}
 
 	return string(captchaCode)
