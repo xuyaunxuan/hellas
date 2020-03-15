@@ -41,7 +41,6 @@ func SendUserCaptchaMail(c *gin.Context) {
 	var sendCaptchaMailParameter user.SendCaptchaMailParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&sendCaptchaMailParameter); err != nil {
-		log.Printf("%+v", sendCaptchaMailParameter)
 		var errorDto common.ErrorDto
 		// 生成错误信息
 		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -65,7 +64,6 @@ func ResetUserPassword(c *gin.Context) {
 	var resetPasswordParameter user.ResetPasswordParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&resetPasswordParameter); err != nil {
-		log.Printf("%+v", resetPasswordParameter)
 		var errorDto common.ErrorDto
 		// 生成错误信息
 		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -76,6 +74,29 @@ func ResetUserPassword(c *gin.Context) {
 
 	// 重置密码
 	result := models.ResetPassword(resetPasswordParameter)
+	if result.Result == constant.NG {
+		c.JSON(http.StatusBadRequest, result)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
+// 用户登录
+func Login(c *gin.Context) {
+	var loginParameter user.LoginParameter
+	// 参数验证
+	if err := c.ShouldBindJSON(&loginParameter); err != nil {
+		var errorDto common.ErrorDto
+		// 生成错误信息
+		errorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
+		// 返回status400
+		c.JSON(http.StatusBadRequest, errorDto)
+		return
+	}
+
+	// 用户登录
+	result := models.Login(loginParameter)
 	if result.Result == constant.NG {
 		c.JSON(http.StatusBadRequest, result)
 		return

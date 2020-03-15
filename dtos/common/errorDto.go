@@ -1,6 +1,6 @@
 package common
 
 type ErrorDto struct {
-	Message string
-	Errors []string
+	Message string  `json:"message"`
+	Errors []string `json:"errors"`
 }

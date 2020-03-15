@@ -24,6 +24,8 @@ func InitRouter() *gin.Engine {
 		user.POST("/sendCaptchaMail", controller.SendUserCaptchaMail)
 		// 密码变更
 		user.POST("/resetPassword", controller.ResetUserPassword)
+		// 用户登录
+		user.POST("/login", controller.Login)
 	}
 
 	return r

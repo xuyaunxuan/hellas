@@ -167,3 +167,54 @@ func ResetPassword(param user.ResetPasswordParameter) common.BaseResult {
 	result.Result = constant.OK
 	return result
 }
+
+// 用户登录
+func Login(param user.LoginParameter) user.LoginResult {
+	// 开启事务
+	tx := db.Begin()
+	// 用户登录返回结果
+	var result user.LoginResult
+	// 用户信息DTO
+	var userList []dtos.User
+	// ID/邮箱必须输入一个
+	if param.AccountId == "" && param.MailAddress == "" {
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","idOrMailMust"))
+		return result
+	}
+
+	// ID登录
+	if param.AccountId != "" {
+		db.Where(&dtos.User{AccountId: param.AccountId}).Find(&userList)
+	} else if param.MailAddress != "" {
+		db.Where(&dtos.User{MailAddress: param.MailAddress}).Find(&userList)
+	}
+
+	// ID/邮箱存在验证
+	if len(userList) == 0 {
+		// ID/邮箱不存在
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","idOrMailNotExist"))
+		return result
+	}
+
+	// 生成混淆密码
+	var confusePassword = utils.CreateMd5Password(userList[0].Salt, param.Password)
+	// 密码验证
+	if confusePassword != userList[0].Password {
+		// 密码不正确
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","passwordIncorrect"))
+		return result
+	}
+
+	result.AccountId = userList[0].AccountId
+	result.MailAddress = userList[0].MailAddress
+	result.NickName = userList[0].NickName
+
+	// 提交事务
+	tx.Commit()
+	// 处理成功
+	result.Result = constant.OK
+	return result
+}

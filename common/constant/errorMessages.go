@@ -10,4 +10,7 @@ var Messages = map[string]string {
 	"len" : "{0}长度不正确",
 	"samePassword" : "密码输入不一致",
 	"sameCaptcha" : "验证码不正确",
+	"idOrMailMust" : "ID/邮箱必须输入",
+	"idOrMailNotExist" : "ID/邮箱不存在",
+	"passwordIncorrect" : "密码不正确",
 }

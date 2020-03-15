@@ -2,6 +2,6 @@ package user
 
 
 type SendCaptchaMailParameter struct {
-	MailAddress string `json:"mail" binding:"required,email,max=50"`
+	MailAddress string `binding:"required,email,max=50"`
 }
 

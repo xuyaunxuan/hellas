@@ -1,6 +1,6 @@
 package common
 
 type BaseResult struct {
-	ErrorDto
-	Result string
+	ErrorDto `json:"errorDto"`
+	Result string `json:"result"`
 }
