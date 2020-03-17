@@ -11,11 +11,10 @@ import (
 )
 
 func init() {
+	// 环境变量读取
 	setting.Init()
+	// 数据库连接
 	models.Setup()
-	//logging.Setup()
-	//gredis.Setup()
-	//util.Setup()
 }
 
 func main() {

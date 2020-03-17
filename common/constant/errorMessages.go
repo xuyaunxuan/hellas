@@ -13,4 +13,6 @@ var Messages = map[string]string {
 	"idOrMailMust" : "ID/邮箱必须输入",
 	"idOrMailNotExist" : "ID/邮箱不存在",
 	"passwordIncorrect" : "密码不正确",
+	"noAuth" : "该功能没有使用权限",
+	"authTimeOut" : "认证信息已过期",
 }

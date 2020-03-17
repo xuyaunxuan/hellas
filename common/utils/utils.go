@@ -5,11 +5,14 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	"hellas/common/constant"
 	"hellas/common/setting"
+	"hellas/dtos/common"
 	"log"
 	"math/big"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -32,6 +35,69 @@ func GenerateToken(accountId string) (string, error) {
 	token, err := tokenClaims.SignedString([]byte(setting.JwtSecret))
 
 	return token, err
+}
+
+// 解析token
+func AuthorityCheck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		freeAuth := false
+		for _, path := range setting.FreeAuthority {
+			if path == c.FullPath() {
+				freeAuth = true
+			}
+		}
+		// 不需要认证，直接进入Controller
+		if freeAuth {
+			c.Next()
+			return
+		}
+
+		var baseResult common.BaseResult
+		token := c.Request.Header.Get("token")
+		// token为空
+		if token == "" {
+			baseResult.ErrorDto.Errors = append(baseResult.ErrorDto.Errors, JoinMessages("","noAuth"))
+			// 返回status401
+			c.JSON(http.StatusUnauthorized, baseResult)
+			c.Abort()
+			return
+		}
+
+		// 解析token
+		_, err :=JwtParse(token)
+		// 解析失败
+		if err != nil {
+			baseResult.ErrorDto.Errors = append(baseResult.ErrorDto.Errors, JoinMessages("","noAuth"))
+			// 返回status401
+			c.JSON(http.StatusUnauthorized, baseResult)
+			c.Abort()
+			return
+		}
+		//else if time.Now().Unix() > tokenInfo.ExpiresAt {
+		//	// token过期
+		//	baseResult.ErrorDto.Errors = append(baseResult.ErrorDto.Errors, JoinMessages("","authTimeOut"))
+		//	// 返回status401
+		//	c.JSON(http.StatusUnauthorized, baseResult)
+		//	c.Abort()
+		//	return
+		//}
+
+		// 验证通过，进入Controller
+		c.Next()
+	}
+}
+
+// 解析token
+func JwtParse(token string) (*Claims, error) {
+	tokenInfo , err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (i interface{}, e error) {
+		return []byte(setting.JwtSecret),nil
+	})
+	if err != nil {
+		log.Print(err)
+		return nil, err
+	}
+
+	return tokenInfo.Claims.(*Claims), nil
 }
 
 // 解析token

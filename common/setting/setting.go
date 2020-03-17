@@ -2,6 +2,7 @@ package setting
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/go-ini/ini"
@@ -27,10 +28,12 @@ var (
 	DataBasePath string
 
 	JwtSecret string
+	FreeAuthority []string
 
 	PageSize int
 )
 
+// 系统设定初期化
 func Init() {
 	var err error
 	Cfg, err = ini.Load("conf/app.ini")
@@ -46,7 +49,6 @@ func Init() {
 	LoadDataBase()
 	// JWT密钥设定
 	LoadJwt()
-	//LoadApp()
 }
 
 func LoadBase() {
@@ -97,14 +99,6 @@ func LoadJwt() {
 	}
 
 	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
+	paths := sec.Key("FREE_AUTHORITY").MustString("")
+	FreeAuthority = strings.Split(paths, "\\")
 }
-
-//func LoadApp() {
-//	sec, err := Cfg.GetSection("app")
-//	if err != nil {
-//		log.Fatalf("Fail to get section 'app': %v", err)
-//	}
-//
-//	JwtSecret = sec.Key("JWT_SECRET").MustString("!@)*#)!@U#@*!@!)")
-//	PageSize = sec.Key("PAGE_SIZE").MustInt(10)
-//}

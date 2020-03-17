@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+	"hellas/common/utils"
 	"hellas/controller"
 
 	"hellas/common/setting"
@@ -17,6 +18,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(setting.RunMode)
 
 	user := r.Group("/user")
+	user.Use(utils.AuthorityCheck())
 	{
 		// 新用户注册
 		user.POST("/register", controller.RegisterUser)
