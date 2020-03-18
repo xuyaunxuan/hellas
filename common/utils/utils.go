@@ -53,7 +53,7 @@ func AuthorityCheck() gin.HandlerFunc {
 		}
 
 		var baseResult common.BaseResult
-		token := c.Request.Header.Get("token")
+		token := c.Request.Header.Get("Authorization")
 		// token为空
 		if token == "" {
 			baseResult.ErrorDto.Errors = append(baseResult.ErrorDto.Errors, JoinMessages("","noAuth"))
@@ -152,12 +152,6 @@ func CreateMessages(fieldErrors validator.ValidationErrors) []string {
 	var messages []string
 	for _, err := range fieldErrors {
 		messages = append(messages, JoinMessages(err.Field(), err.Tag()))
-		log.Printf(err.Namespace())
-		log.Printf(err.Field())
-		log.Printf(err.StructNamespace())
-		log.Printf(err.StructField())
-		log.Printf(err.Tag())
-		log.Printf(err.ActualTag())
 	}
 	return messages
 }

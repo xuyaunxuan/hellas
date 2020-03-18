@@ -9,4 +9,6 @@ var Fields = map[string]string {
 	"CaptchaCode" : "邮箱验证码",
 	"OncePassword" : "一次密码",
 	"TwicePassword" : "二次密码",
+	"Title":"标题",
+	"Tag":"标签",
 }

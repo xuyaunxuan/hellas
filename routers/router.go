@@ -32,5 +32,11 @@ func InitRouter() *gin.Engine {
 		user.POST("/editDetail", controller.EditUserDetail)
 	}
 
+	b := r.Group("b")
+	b.Use(utils.AuthorityCheck())
+	{
+		b.POST("subscribe", controller.Subscribe)
+	}
+
 	return r
 }
