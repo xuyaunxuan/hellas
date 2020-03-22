@@ -2,10 +2,9 @@ package routers
 
 import (
 	"github.com/gin-gonic/gin"
+	"hellas/common/setting"
 	"hellas/common/utils"
 	"hellas/controller"
-
-	"hellas/common/setting"
 )
 
 func InitRouter() *gin.Engine {
@@ -32,10 +31,21 @@ func InitRouter() *gin.Engine {
 		user.POST("/editDetail", controller.EditUserDetail)
 	}
 
-	b := r.Group("b")
+	b := r.Group("/b")
 	b.Use(utils.AuthorityCheck())
 	{
-		b.POST("subscribe", controller.Subscribe)
+		// 投稿
+		b.POST("/subscribe", controller.Subscribe)
+		// 获取用户投稿
+		b.POST("/myArticles", controller.ViewUserArticle)
+		// 编辑投稿
+		b.GET("/editArticles", controller.EditSubscribe)
+		// 删除投稿
+		b.GET("/deleteArticles", controller.DeleteSubscribe)
+		// 获取最新文章
+		b.POST("/showArticles", controller.ViewArticle)
+		// 获取文章详情
+		b.GET("/articleDetail", controller.ArticleDetail)
 	}
 
 	return r

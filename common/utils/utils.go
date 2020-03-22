@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"crypto/rand"
 	"encoding/hex"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
@@ -22,6 +23,11 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
+// 生成文章路径
+func CreateMaxPostPath(count int) string {
+	var path = fmt.Sprintf("%05d", count + 1)
+	return path
+}
 // 生成Token
 func GenerateToken(accountId string) (string, error) {
 	nowTime := time.Now()

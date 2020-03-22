@@ -15,4 +15,5 @@ var Messages = map[string]string {
 	"passwordIncorrect" : "密码不正确",
 	"noAuth" : "认证信息已过期，请重新登录",
 	"authTimeOut" : "认证信息已过期",
+	"articleNotExist":"该文章不存在",
 }
