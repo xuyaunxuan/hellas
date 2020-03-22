@@ -39,9 +39,9 @@ func InitRouter() *gin.Engine {
 		// 获取用户投稿
 		b.POST("/myArticles", controller.ViewUserArticle)
 		// 编辑投稿
-		b.GET("/editArticles", controller.EditSubscribe)
+		b.POST("/editArticles", controller.EditSubscribe)
 		// 删除投稿
-		b.GET("/deleteArticles", controller.DeleteSubscribe)
+		b.POST("/deleteArticles", controller.DeleteSubscribe)
 		// 获取最新文章
 		b.POST("/showArticles", controller.ViewArticle)
 		// 获取文章详情

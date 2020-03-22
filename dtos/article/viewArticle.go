@@ -12,5 +12,6 @@ type ViewArticle struct {
 	UpdateTime time.Time `json:"updateTime"`
 	Tag string `json:"tag"`
 	Content string `json:"content"`
+	ContentOri string `json:"contentOri"`
 	IsPrivate string `json:"isPrivate"`
 }

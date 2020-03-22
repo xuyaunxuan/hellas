@@ -51,12 +51,18 @@ func CreateNewArticle(param article.SubscribeParameter, accountId string) common
 
 // 编辑投稿文章
 func EditArticle(param article.SubscribeParameter, accountId string) common.BaseResult {
+	var result common.BaseResult
+	if param.ArticlePath == "" {
+		// 该文章不存在
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","articleNotExist"))
+		return result
+	}
 	// 开启事务
 	tx := db.Begin()
-	var result common.BaseResult
 	var count int
 	// 文章有效性检索
-	db.Model(&dtos.Article{Id:param.ArticleId,AccountId:accountId,DeleteFlg:"0"}).Count(&count)
+	db.Model(dtos.Article{}).Where(&dtos.Article{Id:param.ArticlePath,AccountId:accountId,DeleteFlg:"0"}).Count(&count)
 	if count == 0 {
 		// 该文章不存在
 		result.Result = constant.NG
@@ -70,7 +76,7 @@ func EditArticle(param article.SubscribeParameter, accountId string) common.Base
 		privateFlg = "1"
 	}
 	// 更新文章
-	db.Model(dtos.Article{}).Where(dtos.Article{Id:param.ArticleId}).Update(dtos.Article{Title : param.Title, ContentOrigin:param.ArticleOri,Content:param.Article,PrivateFlg:privateFlg, UpdateDateTime:time.Now()})
+	db.Model(dtos.Article{}).Where(dtos.Article{Id:param.ArticlePath}).Update(dtos.Article{Title : param.Title, ContentOrigin:param.ArticleOri,Content:param.Article,PrivateFlg:privateFlg,Tag:param.Tag, UpdateDateTime:time.Now()})
 
 	// 提交事务
 	tx.Commit()
@@ -80,12 +86,19 @@ func EditArticle(param article.SubscribeParameter, accountId string) common.Base
 }
 
 func DeleteArticle(param article.DeleteParameter, accountId string) common.BaseResult {
+	var result common.BaseResult
+	if param.ArticlePath == "" {
+		// 该文章不存在
+		result.Result = constant.NG
+		result.Errors = append(result.Errors, utils.JoinMessages("","articleNotExist"))
+		return result
+	}
 	// 开启事务
 	tx := db.Begin()
-	var result common.BaseResult
+
 	var count int
 	// 文章有效性检索
-	db.Model(&dtos.Article{Id:param.ArticleId,AccountId:accountId,DeleteFlg:"0"}).Count(&count)
+	db.Model(dtos.Article{}).Where(&dtos.Article{Id:param.ArticlePath,AccountId:accountId,DeleteFlg:"0"}).Count(&count)
 	if count == 0 {
 		// 该文章不存在
 		result.Result = constant.NG
@@ -94,7 +107,7 @@ func DeleteArticle(param article.DeleteParameter, accountId string) common.BaseR
 	}
 
 	// 更新文章
-	db.Model(dtos.Article{}).Where(dtos.Article{Id:param.ArticleId}).Update(dtos.Article{DeleteFlg:"1", UpdateDateTime:time.Now()})
+	db.Model(dtos.Article{}).Where(dtos.Article{Id:param.ArticlePath}).Update(dtos.Article{DeleteFlg:"1", UpdateDateTime:time.Now()})
 
 	// 提交事务
 	tx.Commit()
@@ -165,6 +178,8 @@ func GetArticleDetail(postId string, remoteAddr string) article.ViewArticleResul
 			UpdateTime:art.UpdateDateTime,
 			Tag:art.Tag,
 			Content:art.Content,
+			ContentOri:art.ContentOrigin,
+			IsPrivate:art.PrivateFlg,
 		}
 		articles = append(articles, rs)
 	}

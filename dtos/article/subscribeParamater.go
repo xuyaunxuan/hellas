@@ -7,4 +7,5 @@ type SubscribeParameter struct {
 	ArticleOri string `binding:""`
 	Article string `binding:""`
 	ArticleId string `binding:""`
+	ArticlePath string `binding:""`
 }
