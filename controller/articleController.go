@@ -8,7 +8,6 @@ import (
 	"hellas/dtos/article"
 	"hellas/dtos/common"
 	"hellas/models"
-	"log"
 	"net/http"
 )
 
@@ -16,7 +15,6 @@ import (
 func ViewArticle(c *gin.Context) {
 	var viewArticleParameter article.ViewArticleParameter
 	if err := c.ShouldBindJSON(&viewArticleParameter); err != nil {
-		log.Printf("%+v", viewArticleParameter)
 		var baseResult common.BaseResult
 		// 生成错误信息
 		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -47,7 +45,6 @@ func ArticleDetail(c *gin.Context) {
 func ViewUserArticle(c *gin.Context) {
 	var viewArticleParameter article.ViewArticleParameter
 	if err := c.ShouldBindJSON(&viewArticleParameter); err != nil {
-		log.Printf("%+v", viewArticleParameter)
 		var baseResult common.BaseResult
 		// 生成错误信息
 		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -68,7 +65,6 @@ func Subscribe(c *gin.Context) {
 	var subscribeParameter article.SubscribeParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&subscribeParameter); err != nil {
-		log.Printf("%+v", subscribeParameter)
 		var baseResult common.BaseResult
 		// 生成错误信息
 		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -95,7 +91,6 @@ func EditSubscribe(c *gin.Context) {
 	var subscribeParameter article.SubscribeParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&subscribeParameter); err != nil {
-		log.Printf("%+v", subscribeParameter)
 		var baseResult common.BaseResult
 		// 生成错误信息
 		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -122,7 +117,6 @@ func DeleteSubscribe(c *gin.Context) {
 	var deleteParameter article.DeleteParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&deleteParameter); err != nil {
-		log.Printf("%+v", deleteParameter)
 		var baseResult common.BaseResult
 		// 生成错误信息
 		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))

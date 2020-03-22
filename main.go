@@ -8,6 +8,7 @@ import (
 	"hellas/routers"
 	"log"
 	"net/http"
+	"os"
 )
 
 func init() {
@@ -19,6 +20,8 @@ func init() {
 
 func main() {
 	gin.SetMode(setting.RunMode)
+	file, _ := os.Create("access.log")
+	gin.DefaultWriter = file
 
 	routersInit := routers.InitRouter()
 	readTimeout := setting.ReadTimeout

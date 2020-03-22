@@ -8,7 +8,6 @@ import (
 	"hellas/dtos/common"
 	"hellas/dtos/user"
 	"hellas/models"
-	"log"
 	"net/http"
 )
 
@@ -17,7 +16,6 @@ func RegisterUser(c *gin.Context) {
 	var registerParameter user.RegisterParameter
 	// 参数验证
 	if err := c.ShouldBindJSON(&registerParameter); err != nil {
-		log.Printf("%+v", registerParameter)
 		var baseResult common.BaseResult
 		// 生成错误信息
 		baseResult.ErrorDto.Errors = utils.CreateMessages(err.(validator.ValidationErrors))
@@ -107,7 +105,5 @@ func Login(c *gin.Context) {
 
 // 用户情报更新
 func EditUserDetail(c *gin.Context) {
-	//token := c.Request.Header.Get("token")
-	//accountId, _ :=utils.JwtParseUser(token)
-	//log.Print(accountId)
+
 }

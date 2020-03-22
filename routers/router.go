@@ -16,36 +16,36 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(setting.RunMode)
 
-	user := r.Group("/user")
+		user := r.Group("/v1/u")
 	user.Use(utils.AuthorityCheck())
 	{
 		// 新用户注册
-		user.POST("/register", controller.RegisterUser)
+		user.POST("/reg", controller.RegisterUser)
 		// 请求邮箱验证码
-		user.POST("/sendCaptchaMail", controller.SendUserCaptchaMail)
+		user.POST("/send/mail", controller.SendUserCaptchaMail)
 		// 密码变更
-		user.POST("/resetPassword", controller.ResetUserPassword)
+		user.POST("/reset/password", controller.ResetUserPassword)
 		// 用户登录
 		user.POST("/login", controller.Login)
 		// 用户信息编辑
-		user.POST("/editDetail", controller.EditUserDetail)
+		//user.POST("/edit/info", controller.EditUserDetail)
 	}
 
-	b := r.Group("/b")
+	b := r.Group("/v1/b")
 	b.Use(utils.AuthorityCheck())
 	{
 		// 投稿
-		b.POST("/subscribe", controller.Subscribe)
+		b.POST("/u/post", controller.Subscribe)
 		// 获取用户投稿
-		b.POST("/myArticles", controller.ViewUserArticle)
+		b.POST("/u/all/post", controller.ViewUserArticle)
 		// 编辑投稿
-		b.POST("/editArticles", controller.EditSubscribe)
+		b.POST("/u/edit", controller.EditSubscribe)
 		// 删除投稿
-		b.POST("/deleteArticles", controller.DeleteSubscribe)
+		b.POST("/u/del/post", controller.DeleteSubscribe)
 		// 获取最新文章
-		b.POST("/showArticles", controller.ViewArticle)
+		b.POST("/all/post", controller.ViewArticle)
 		// 获取文章详情
-		b.GET("/articleDetail", controller.ArticleDetail)
+		b.GET("/detail", controller.ArticleDetail)
 	}
 
 	return r
