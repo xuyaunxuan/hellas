@@ -20,6 +20,7 @@ func init() {
 
 func main() {
 	gin.SetMode(setting.RunMode)
+	//file, _ := os.Create("/home/g350787341a/access.log")
 	file, _ := os.Create("access.log")
 	gin.DefaultWriter = file
 

@@ -37,6 +37,7 @@ var (
 func Init() {
 	var err error
 	Cfg, err = ini.Load("conf/app.ini")
+	//Cfg, err = ini.Load("/home/g350787341a/conf/app.ini")
 	if err != nil {
 		log.Fatalf("Fail to parse 'conf/app.ini': %v", err)
 	}
